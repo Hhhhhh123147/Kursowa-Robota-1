@@ -1,0 +1,5 @@
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.AssemblyInfoInputs.cache
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.AssemblyInfo.cs
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.csproj.CoreCompileInputs.cache
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.sourcelink.json

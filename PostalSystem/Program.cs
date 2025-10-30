@@ -300,49 +300,50 @@ namespace PostalSystem
             }
         }
 
-        // ============ ЗАПИТ 4: Друкарні для газети ============
-        static void Query4_PrintingHousesByNewspaper()
+        // ============ ЗАПИТ 5: Редактор у друкарні ============
+static void Query5_EditorByPrintingHouse()
+{
+    Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
+    Console.WriteLine("║         РЕДАКТОРИ ГАЗЕТ У ЗАЗНАЧЕНІЙ ДРУКАРНІ             ║");
+    Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
+    
+    Console.Write("Введіть назву друкарні (або частину): ");
+    string searchName = Console.ReadLine();
+    
+    Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
+    
+    var query = from ph in printingHouses
+                where ph.Name.ToLower().Contains(searchName.ToLower())
+                join po in postOffices on ph.Key equals po.PrintingHouseKey
+                join n in newspapers on po.NewspaperKey equals n.Key
+                select new { PrintingHouseName = ph.Name, ph.Address, NewspaperName = n.Name, n.Editor };
+
+    var results = query.Distinct().ToList();
+    
+    if (results.Count == 0)
+    {
+        Console.WriteLine("❌ Друкарню не знайдено.");
+        return;
+    }
+
+    var grouped = results.GroupBy(r => new { r.PrintingHouseName, r.Address });
+    
+    foreach (var group in grouped)
+    {
+        Console.WriteLine($"🏭 Друкарня: {group.Key.PrintingHouseName}");
+        Console.WriteLine($"   Адреса: {group.Key.Address}");
+        Console.WriteLine($"   Друкують {group.Count()} газет(и):\n");
+        
+        int counter = 1;
+        foreach (var item in group)
         {
-            Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
-            Console.WriteLine("║        У ЯКИХ ДРУКАРНЯХ ДРУКУЮТЬСЯ ГАЗЕТИ                 ║");
-            Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
-            
-            Console.Write("Введіть назву газети (або частину назви): ");
-            string searchName = Console.ReadLine();
-            
-            Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
-            
-            var query = from n in newspapers
-                        where n.Name.ToLower().Contains(searchName.ToLower())
-                        join po in postOffices on n.Key equals po.NewspaperKey
-                        join ph in printingHouses on po.PrintingHouseKey equals ph.Key
-                        select new { n.Name, ph.Name, ph.Address };
-
-            var results = query.Distinct().ToList();
-            
-            if (results.Count == 0)
-            {
-                Console.WriteLine("❌ Газету не знайдено або вона не друкується.");
-                return;
-            }
-
-            var grouped = results.GroupBy(r => r.Name);
-            
-            foreach (var group in grouped)
-            {
-                Console.WriteLine($"📰 Газета: {group.Key}");
-                Console.WriteLine($"   Друкується у {group.Count()} друкарні(ях):\n");
-                
-                int counter = 1;
-                foreach (var item in group)
-                {
-                    Console.WriteLine($"   [{counter}] {item.Name}");
-                    Console.WriteLine($"       Адреса: {item.Address}");
-                    counter++;
-                }
-                Console.WriteLine(new string('─', 60));
-            }
+            Console.WriteLine($"   [{counter}] {item.NewspaperName}");
+            Console.WriteLine($"       Редактор: {item.Editor}");
+            counter++;
         }
+        Console.WriteLine(new string('─', 60));
+    }
+}
 
         // ============ ЗАПИТ 5: Редактор у друкарні ============
         static void Query5_EditorByPrintingHouse()
@@ -360,7 +361,7 @@ namespace PostalSystem
                         where ph.Name.ToLower().Contains(searchName.ToLower())
                         join po in postOffices on ph.Key equals po.PrintingHouseKey
                         join n in newspapers on po.NewspaperKey equals n.Key
-                        select new { ph.Name, ph.Address, n.Name, n.Editor };
+                        select new { PrintingHouseName = ph.Name, ph.Address, NewspaperName = n.Name, n.Editor };
 
             var results = query.Distinct().ToList();
             
