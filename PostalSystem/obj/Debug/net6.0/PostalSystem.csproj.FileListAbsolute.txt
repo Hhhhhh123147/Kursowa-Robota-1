@@ -3,3 +3,13 @@ C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\Pos
 C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.AssemblyInfo.cs
 C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.csproj.CoreCompileInputs.cache
 C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.sourcelink.json
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\bin\Debug\net6.0\PostalSystem.exe
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\bin\Debug\net6.0\PostalSystem.deps.json
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\bin\Debug\net6.0\PostalSystem.runtimeconfig.json
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\bin\Debug\net6.0\PostalSystem.dll
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\bin\Debug\net6.0\PostalSystem.pdb
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.dll
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\refint\PostalSystem.dll
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.pdb
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\PostalSystem.genruntimeconfig.cache
+C:\Users\W10\Documents\GitHub\Kursowa-Robota-1\PostalSystem\obj\Debug\net6.0\ref\PostalSystem.dll
