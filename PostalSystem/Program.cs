@@ -42,7 +42,6 @@ namespace PostalSystem
         {
             try
             {
-                // Завантаження газет
                 if (File.Exists(paths[0]))
                 {
                     using (StreamReader reader = new StreamReader(paths[0], Encoding.UTF8))
@@ -67,7 +66,6 @@ namespace PostalSystem
                     Console.WriteLine($"✓ Завантажено газет: {newspapers.Count}");
                 }
 
-                // Завантаження друкарень
                 if (File.Exists(paths[1]))
                 {
                     using (StreamReader reader = new StreamReader(paths[1], Encoding.UTF8))
@@ -89,7 +87,6 @@ namespace PostalSystem
                     Console.WriteLine($"✓ Завантажено друкарень: {printingHouses.Count}");
                 }
 
-                // Завантаження поштових відділень
                 if (File.Exists(paths[2]))
                 {
                     using (StreamReader reader = new StreamReader(paths[2], Encoding.UTF8))
@@ -205,7 +202,6 @@ namespace PostalSystem
             Console.Write("Ваш вибір: ");
         }
 
-        // ============ ЗАПИТ 1: Всі газети ============
         static void Query1_AllNewspapers()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -227,7 +223,6 @@ namespace PostalSystem
             Console.WriteLine($"\nВсього газет: {newspapers.Count}");
         }
 
-        // ============ ЗАПИТ 2: Друкарні та газети ============
         static void Query2_PrintingHousesWithNewspapers()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -260,7 +255,6 @@ namespace PostalSystem
             }
         }
 
-        // ============ ЗАПИТ 3: Поштові відділення ============
         static void Query3_PostOfficesInfo()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -283,7 +277,6 @@ namespace PostalSystem
                 Console.WriteLine($"    Адреса: {item.Address}");
                 Console.WriteLine($"    Кількість найменувань газет: {item.NewspapersCount}");
                 
-                // Показуємо які газети
                 var newspapersInOffice = from po in postOffices
                                         where po.Number == item.Number
                                         join n in newspapers on po.NewspaperKey equals n.Key
@@ -300,52 +293,49 @@ namespace PostalSystem
             }
         }
 
-        // ============ ЗАПИТ 5: Редактор у друкарні ============
-static void Query5_EditorByPrintingHouse()
-{
-    Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
-    Console.WriteLine("║         РЕДАКТОРИ ГАЗЕТ У ЗАЗНАЧЕНІЙ ДРУКАРНІ             ║");
-    Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
-    
-    Console.Write("Введіть назву друкарні (або частину): ");
-    string searchName = Console.ReadLine();
-    
-    Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
-    
-    var query = from ph in printingHouses
-                where ph.Name.ToLower().Contains(searchName.ToLower())
-                join po in postOffices on ph.Key equals po.PrintingHouseKey
-                join n in newspapers on po.NewspaperKey equals n.Key
-                select new { PrintingHouseName = ph.Name, ph.Address, NewspaperName = n.Name, n.Editor };
-
-    var results = query.Distinct().ToList();
-    
-    if (results.Count == 0)
-    {
-        Console.WriteLine("❌ Друкарню не знайдено.");
-        return;
-    }
-
-    var grouped = results.GroupBy(r => new { r.PrintingHouseName, r.Address });
-    
-    foreach (var group in grouped)
-    {
-        Console.WriteLine($"🏭 Друкарня: {group.Key.PrintingHouseName}");
-        Console.WriteLine($"   Адреса: {group.Key.Address}");
-        Console.WriteLine($"   Друкують {group.Count()} газет(и):\n");
-        
-        int counter = 1;
-        foreach (var item in group)
+        static void Query4_PrintingHousesByNewspaper()
         {
-            Console.WriteLine($"   [{counter}] {item.NewspaperName}");
-            Console.WriteLine($"       Редактор: {item.Editor}");
-            counter++;
-        }
-        Console.WriteLine(new string('─', 60));
-    }
-}
+            Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║        У ЯКИХ ДРУКАРНЯХ ДРУКУЮТЬСЯ ГАЗЕТИ                 ║");
+            Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
+            
+            Console.Write("Введіть назву газети (або частину назви): ");
+            string searchName = Console.ReadLine() ?? "";
+            
+            Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
+            
+            var query = from n in newspapers
+                        where n.Name.ToLower().Contains(searchName.ToLower())
+                        join po in postOffices on n.Key equals po.NewspaperKey
+                        join ph in printingHouses on po.PrintingHouseKey equals ph.Key
+                        select new { NewspaperName = n.Name, PrintingHouseName = ph.Name, ph.Address };
 
-        // ============ ЗАПИТ 5: Редактор у друкарні ============
+            var results = query.Distinct().ToList();
+            
+            if (results.Count == 0)
+            {
+                Console.WriteLine("❌ Газету не знайдено або вона не друкується.");
+                return;
+            }
+
+            var grouped = results.GroupBy(r => r.NewspaperName);
+            
+            foreach (var group in grouped)
+            {
+                Console.WriteLine($"📰 Газета: {group.Key}");
+                Console.WriteLine($"   Друкується у {group.Count()} друкарні(ях):\n");
+                
+                int counter = 1;
+                foreach (var item in group)
+                {
+                    Console.WriteLine($"   [{counter}] {item.PrintingHouseName}");
+                    Console.WriteLine($"       Адреса: {item.Address}");
+                    counter++;
+                }
+                Console.WriteLine(new string('─', 60));
+            }
+        }
+
         static void Query5_EditorByPrintingHouse()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -353,7 +343,7 @@ static void Query5_EditorByPrintingHouse()
             Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
             
             Console.Write("Введіть назву друкарні (або частину): ");
-            string searchName = Console.ReadLine();
+            string searchName = Console.ReadLine() ?? "";
             
             Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
             
@@ -371,18 +361,18 @@ static void Query5_EditorByPrintingHouse()
                 return;
             }
 
-            var grouped = results.GroupBy(r => new { r.Name, r.Address });
+            var grouped = results.GroupBy(r => new { r.PrintingHouseName, r.Address });
             
             foreach (var group in grouped)
             {
-                Console.WriteLine($"🏭 Друкарня: {group.Key.Name}");
+                Console.WriteLine($"🏭 Друкарня: {group.Key.PrintingHouseName}");
                 Console.WriteLine($"   Адреса: {group.Key.Address}");
                 Console.WriteLine($"   Друкують {group.Count()} газет(и):\n");
                 
                 int counter = 1;
                 foreach (var item in group)
                 {
-                    Console.WriteLine($"   [{counter}] {item.Name}");
+                    Console.WriteLine($"   [{counter}] {item.NewspaperName}");
                     Console.WriteLine($"       Редактор: {item.Editor}");
                     counter++;
                 }
@@ -390,7 +380,6 @@ static void Query5_EditorByPrintingHouse()
             }
         }
 
-        // ============ ЗАПИТ 6: Вартість тиражу ============
         static void Query6_TotalCirculationCost()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -398,7 +387,7 @@ static void Query5_EditorByPrintingHouse()
             Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
             
             Console.Write("Введіть назву газети: ");
-            string searchName = Console.ReadLine();
+            string searchName = Console.ReadLine() ?? "";
             
             Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
             
@@ -431,7 +420,6 @@ static void Query5_EditorByPrintingHouse()
             }
         }
 
-        // ============ ЗАПИТ 7: Відділення з найбільшою кількістю ============
         static void Query7_PostOfficeWithMostNewspapers()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -473,7 +461,6 @@ static void Query5_EditorByPrintingHouse()
             }
         }
 
-        // ============ ЗАПИТ 8: Відділення для газети ============
         static void Query8_PostOfficesByNewspaper()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
@@ -481,7 +468,7 @@ static void Query5_EditorByPrintingHouse()
             Console.WriteLine("╚═══════════════════════════════════════════════════════════╝\n");
             
             Console.Write("Введіть назву газети: ");
-            string searchName = Console.ReadLine();
+            string searchName = Console.ReadLine() ?? "";
             
             Console.WriteLine($"\n🔍 Пошук для: '{searchName}'\n");
             
@@ -516,7 +503,6 @@ static void Query5_EditorByPrintingHouse()
             }
         }
 
-        // ============ ЗАПИТ 9: Відділення з максимальною вартістю ============
         static void Query9_PostOfficeWithMaxCost()
         {
             Console.WriteLine("╔═══════════════════════════════════════════════════════════╗");
